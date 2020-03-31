@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from '@emotion/styled';
 import { S3Image } from 'aws-amplify-react';
 import { Button } from 'antd';
@@ -7,6 +7,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { deleteProduct } from '../../../../../graphql/mutations';
 import { FormModal } from './FormModal';
 import { EditProductForm } from './EditProductForm';
+import { UserContext } from '../../../../../context/user-context';
 
 const Container = styled.div`
   border-bottom: 1px black dashed;
@@ -38,6 +39,9 @@ const StyledButton = styled(Button)`
 `;
 
 export const Product = ({ product }) => {
+  const user = useContext(UserContext);
+  const owner = user.sub;
+
   // delete the product from AWS
   const deleteProductHandler = async () => {
     try {
@@ -64,7 +68,7 @@ export const Product = ({ product }) => {
       />
       <ButtonContainer>
         <FormModal>
-          <EditProductForm product={product} />
+          <EditProductForm product={product} owner={owner} />
         </FormModal>
         <StyledButton onClick={deleteProductHandler}>
           Delete Product

@@ -71,7 +71,7 @@ export const NewProductForm = ({ marketId }) => {
   const [market, setMarket] = useContext(ProductsContext);
   const user = useContext(UserContext);
   const owner = user.sub;
-  const [id, setId] = useState(null);
+
   const [error, setError] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -91,11 +91,8 @@ export const NewProductForm = ({ marketId }) => {
         const prevProducts = market.products.items.filter(
           item => item.id !== createdProduct.id,
         );
-        console.log('product data is', productData);
-        console.log('created product is', createProduct);
-        console.log('previous products are', prevProducts);
+
         const updatedProducts = [createdProduct, ...prevProducts];
-        console.log('updaetd products are ', updatedProducts);
 
         setMarket(market => ({
           ...market,

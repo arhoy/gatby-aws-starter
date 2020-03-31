@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from '@emotion/styled';
 import { API, graphqlOperation } from 'aws-amplify';
 
@@ -7,6 +7,9 @@ import { H3 } from '../../../../reusableStyles/typography/Typography';
 import Error from '../../../Error';
 import { updateProduct } from '../../../../../graphql/mutations';
 import { dollarToCents, centsToDollars } from '../../../../../utils/awsHelpers';
+import { onUpdateProduct } from '../../../../../graphql/subscriptions';
+import { ProductsContext } from '../../../../../context/products-context';
+import { UserContext } from '../../../../../context/user-context';
 
 const Container = styled.div`
   max-width: ${props => props.theme.screenSize.mobileL};
@@ -63,12 +66,45 @@ const Button = styled.button`
 const TitleContainer = styled.div``;
 
 export const EditProductForm = ({ marketId, product }) => {
+  // context
+  const [market, setMarket] = useContext(ProductsContext);
+  const user = useContext(UserContext);
+  const owner = user.sub;
+
+  // state
   const [error, setError] = useState('');
   const [description, setDescription] = useState(product.description);
   const [price, setPrice] = useState(centsToDollars(product.price));
   const [shipped, setShipped] = useState(product.shipped);
 
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const updateProductListener = API.graphql(
+      graphqlOperation(onUpdateProduct, { owner }),
+    ).subscribe({
+      next: productData => {
+        const updateProduct = productData.value.data.onUpdateProduct;
+        setMarket(prevMarket => {
+          const index = prevMarket.products.items.findIndex(
+            product => product.id === updateProduct.id,
+          );
+
+          const updatedProducts = [
+            ...prevMarket.products.items.slice(0, index),
+            updateProduct,
+            ...prevMarket.products.items.slice(index + 1),
+          ];
+          return { ...market, products: { items: updatedProducts } };
+        });
+      },
+    });
+
+    // unmounting
+    return () => {
+      updateProductListener.unsubscribe();
+    };
+  }, []);
 
   const productUpdateHandler = async e => {
     e.preventDefault();
@@ -81,22 +117,15 @@ export const EditProductForm = ({ marketId, product }) => {
         shipped,
       };
 
-      const result = await API.graphql(
-        graphqlOperation(updateProduct, { input }),
-      );
-
-      console.log('product updated', result);
+      await API.graphql(graphqlOperation(updateProduct, { input }));
 
       // reset state
       setDescription('');
       setPrice('');
 
-      setShipped('shipped');
+      setShipped(false);
 
       setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 2000);
     } catch (err) {
       console.error(err);
       setError(err);
@@ -106,7 +135,7 @@ export const EditProductForm = ({ marketId, product }) => {
   return (
     <Container>
       <TitleContainer>
-        <H3>Edit Product</H3>
+        <H3>{success ? 'Product Updated' : 'Edit Product'}</H3>
       </TitleContainer>
 
       {error && <Error errorMessage={error.message} />}
@@ -151,7 +180,7 @@ export const EditProductForm = ({ marketId, product }) => {
             Submit My Info
           </Button>
         </Field>
-        {success && <p className="success"> product updated </p>}
+        {success && <p className="success"> Product Successfully Updated </p>}
       </Form>
     </Container>
   );
