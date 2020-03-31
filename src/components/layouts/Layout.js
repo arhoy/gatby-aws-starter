@@ -20,9 +20,9 @@ import { getCurrentUser } from '../../utils/auth';
 
 const theme = {
   colors: {
-    primary: '#244F9B',
-    primaryDark: '#002F74',
-    primaryLight: '#5196FF',
+    primary: '#1890ff',
+    primaryDark: '#003a8c',
+    primaryLight: '#91d5ff',
     primaryLight2: 'rgba(81, 150, 255, 0.90)',
     secondaryVeryLight: '#d2f7f2',
     secondary: 'rgb(24, 163, 201)',

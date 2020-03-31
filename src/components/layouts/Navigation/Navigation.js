@@ -12,7 +12,7 @@ import { UserContext } from '../../../context/user-context';
 const Header = styled.header`
   position: relative;
   padding: 3rem 0;
-  background: ${props => props.theme.colors.primary};
+  background: ${props => props.theme.colors.primaryDark};
   color: ${props => props.theme.colors.white};
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -98,7 +98,11 @@ const CustomLink = styled(NoStyleLink)`
       left: 0;
       right: auto;
       width: 100%;
+      color: ${props => props.theme.colors.white};
     }
+  }
+  &:hover {
+    color: ${props => props.theme.colors.white};
   }
 `;
 

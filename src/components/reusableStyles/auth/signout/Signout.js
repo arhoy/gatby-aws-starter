@@ -8,8 +8,10 @@ const Button = styled.button`
   border: none;
   padding: 3px 5px;
   cursor: pointer;
+  color: ${props => props.theme.colors.black};
   background: ${props => props.theme.colors.white};
   border-radius: 3px;
+  font-size: 1.3rem;
   &:hover {
     background: ${props => props.theme.colors.primaryLight};
     color: ${props => props.theme.colors.white};

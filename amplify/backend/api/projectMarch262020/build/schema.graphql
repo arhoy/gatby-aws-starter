@@ -1,14 +1,51 @@
-type Task {
+type Market {
   id: ID!
-  title: String!
-  description: String
-  status: String
+  name: String!
+  products(filter: ModelProductFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelProductConnection
+  tags: [String]
+  owner: String!
+  createdAt: String
 }
 
-type PrivateNote {
+type Product {
   id: ID!
-  content: String!
+  description: String!
+  market: Market
+  file: S3Object!
+  price: Float!
+  shipped: Boolean!
   owner: String
+  createdAt: String
+}
+
+type S3Object {
+  bucket: String!
+  region: String!
+  key: String!
+}
+
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  registered: Boolean
+  orders(filter: ModelOrderFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelOrderConnection
+}
+
+type Order {
+  id: ID!
+  product: Product
+  user: User
+  shippingAddress: ShippingAddress
+  createdAt: String
+}
+
+type ShippingAddress {
+  city: String!
+  country: String!
+  address_line1: String!
+  address_state: String!
+  address_zip: String!
 }
 
 enum ModelSortDirection {
@@ -16,8 +53,8 @@ enum ModelSortDirection {
   DESC
 }
 
-type ModelTaskConnection {
-  items: [Task]
+type ModelMarketConnection {
+  items: [Market]
   nextToken: String
 }
 
@@ -94,57 +131,66 @@ input ModelSizeInput {
   between: [Int]
 }
 
-input ModelTaskFilterInput {
+input ModelMarketFilterInput {
   id: ModelIDInput
-  title: ModelStringInput
-  description: ModelStringInput
-  status: ModelStringInput
-  and: [ModelTaskFilterInput]
-  or: [ModelTaskFilterInput]
-  not: ModelTaskFilterInput
+  name: ModelStringInput
+  tags: ModelStringInput
+  owner: ModelStringInput
+  createdAt: ModelStringInput
+  and: [ModelMarketFilterInput]
+  or: [ModelMarketFilterInput]
+  not: ModelMarketFilterInput
 }
 
 type Query {
-  getTask(id: ID!): Task
-  listTasks(filter: ModelTaskFilterInput, limit: Int, nextToken: String): ModelTaskConnection
-  getPrivateNote(id: ID!): PrivateNote
-  listPrivateNotes(filter: ModelPrivateNoteFilterInput, limit: Int, nextToken: String): ModelPrivateNoteConnection
+  getMarket(id: ID!): Market
+  listMarkets(filter: ModelMarketFilterInput, limit: Int, nextToken: String): ModelMarketConnection
+  getProduct(id: ID!): Product
+  listProducts(filter: ModelProductFilterInput, limit: Int, nextToken: String): ModelProductConnection
+  getUser(id: ID!): User
+  searchMarkets(filter: SearchableMarketFilterInput, sort: SearchableMarketSortInput, limit: Int, nextToken: String): SearchableMarketConnection
 }
 
-input CreateTaskInput {
+input CreateMarketInput {
   id: ID
-  title: String!
-  description: String
-  status: String
+  name: String!
+  tags: [String]
+  owner: String!
+  createdAt: String
 }
 
-input UpdateTaskInput {
+input UpdateMarketInput {
   id: ID!
-  title: String
-  description: String
-  status: String
+  name: String
+  tags: [String]
+  owner: String
+  createdAt: String
 }
 
-input DeleteTaskInput {
+input DeleteMarketInput {
   id: ID
 }
 
 type Mutation {
-  createTask(input: CreateTaskInput!, condition: ModelTaskConditionInput): Task
-  updateTask(input: UpdateTaskInput!, condition: ModelTaskConditionInput): Task
-  deleteTask(input: DeleteTaskInput!, condition: ModelTaskConditionInput): Task
-  createPrivateNote(input: CreatePrivateNoteInput!, condition: ModelPrivateNoteConditionInput): PrivateNote
-  updatePrivateNote(input: UpdatePrivateNoteInput!, condition: ModelPrivateNoteConditionInput): PrivateNote
-  deletePrivateNote(input: DeletePrivateNoteInput!, condition: ModelPrivateNoteConditionInput): PrivateNote
+  createMarket(input: CreateMarketInput!, condition: ModelMarketConditionInput): Market
+  updateMarket(input: UpdateMarketInput!, condition: ModelMarketConditionInput): Market
+  deleteMarket(input: DeleteMarketInput!, condition: ModelMarketConditionInput): Market
+  createProduct(input: CreateProductInput!, condition: ModelProductConditionInput): Product
+  updateProduct(input: UpdateProductInput!, condition: ModelProductConditionInput): Product
+  deleteProduct(input: DeleteProductInput!, condition: ModelProductConditionInput): Product
+  registerUser(input: CreateUserInput!, condition: ModelUserConditionInput): User
+  updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User
+  createOrder(input: CreateOrderInput!, condition: ModelOrderConditionInput): Order
 }
 
-input ModelTaskConditionInput {
-  title: ModelStringInput
-  description: ModelStringInput
-  status: ModelStringInput
-  and: [ModelTaskConditionInput]
-  or: [ModelTaskConditionInput]
-  not: ModelTaskConditionInput
+input ModelMarketConditionInput {
+  name: ModelStringInput
+  tags: ModelStringInput
+  owner: ModelStringInput
+  createdAt: ModelStringInput
+  and: [ModelMarketConditionInput]
+  or: [ModelMarketConditionInput]
+  not: ModelMarketConditionInput
 }
 
 enum ModelAttributeTypes {
@@ -161,44 +207,230 @@ enum ModelAttributeTypes {
 }
 
 type Subscription {
-  onCreateTask: Task @aws_subscribe(mutations: ["createTask"])
-  onUpdateTask: Task @aws_subscribe(mutations: ["updateTask"])
-  onDeleteTask: Task @aws_subscribe(mutations: ["deleteTask"])
-  onCreatePrivateNote(owner: String!): PrivateNote @aws_subscribe(mutations: ["createPrivateNote"])
-  onUpdatePrivateNote(owner: String!): PrivateNote @aws_subscribe(mutations: ["updatePrivateNote"])
-  onDeletePrivateNote(owner: String!): PrivateNote @aws_subscribe(mutations: ["deletePrivateNote"])
+  onCreateMarket: Market @aws_subscribe(mutations: ["createMarket"])
+  onUpdateMarket: Market @aws_subscribe(mutations: ["updateMarket"])
+  onDeleteMarket: Market @aws_subscribe(mutations: ["deleteMarket"])
+  onCreateProduct(owner: String!): Product @aws_subscribe(mutations: ["createProduct"])
+  onUpdateProduct(owner: String!): Product @aws_subscribe(mutations: ["updateProduct"])
+  onDeleteProduct(owner: String!): Product @aws_subscribe(mutations: ["deleteProduct"])
 }
 
-type ModelPrivateNoteConnection {
-  items: [PrivateNote]
+input S3ObjectInput {
+  bucket: String!
+  region: String!
+  key: String!
+}
+
+type ModelProductConnection {
+  items: [Product]
   nextToken: String
 }
 
-input ModelPrivateNoteFilterInput {
+input ModelProductFilterInput {
   id: ModelIDInput
-  content: ModelStringInput
-  and: [ModelPrivateNoteFilterInput]
-  or: [ModelPrivateNoteFilterInput]
-  not: ModelPrivateNoteFilterInput
+  description: ModelStringInput
+  price: ModelFloatInput
+  shipped: ModelBooleanInput
+  owner: ModelStringInput
+  createdAt: ModelStringInput
+  and: [ModelProductFilterInput]
+  or: [ModelProductFilterInput]
+  not: ModelProductFilterInput
 }
 
-input CreatePrivateNoteInput {
+input CreateProductInput {
   id: ID
-  content: String!
+  description: String!
+  file: S3ObjectInput!
+  price: Float!
+  shipped: Boolean!
+  owner: String
+  createdAt: String
+  productMarketId: ID
 }
 
-input UpdatePrivateNoteInput {
+input UpdateProductInput {
   id: ID!
-  content: String
+  description: String
+  file: S3ObjectInput
+  price: Float
+  shipped: Boolean
+  owner: String
+  createdAt: String
+  productMarketId: ID
 }
 
-input DeletePrivateNoteInput {
+input DeleteProductInput {
   id: ID
 }
 
-input ModelPrivateNoteConditionInput {
-  content: ModelStringInput
-  and: [ModelPrivateNoteConditionInput]
-  or: [ModelPrivateNoteConditionInput]
-  not: ModelPrivateNoteConditionInput
+input ModelProductConditionInput {
+  description: ModelStringInput
+  price: ModelFloatInput
+  shipped: ModelBooleanInput
+  createdAt: ModelStringInput
+  and: [ModelProductConditionInput]
+  or: [ModelProductConditionInput]
+  not: ModelProductConditionInput
+}
+
+input ModelUserFilterInput {
+  id: ModelIDInput
+  username: ModelStringInput
+  email: ModelStringInput
+  registered: ModelBooleanInput
+  and: [ModelUserFilterInput]
+  or: [ModelUserFilterInput]
+  not: ModelUserFilterInput
+}
+
+input CreateUserInput {
+  id: ID
+  username: String!
+  email: String!
+  registered: Boolean
+}
+
+input UpdateUserInput {
+  id: ID!
+  username: String
+  email: String
+  registered: Boolean
+}
+
+input ModelUserConditionInput {
+  username: ModelStringInput
+  email: ModelStringInput
+  registered: ModelBooleanInput
+  and: [ModelUserConditionInput]
+  or: [ModelUserConditionInput]
+  not: ModelUserConditionInput
+}
+
+input ShippingAddressInput {
+  city: String!
+  country: String!
+  address_line1: String!
+  address_state: String!
+  address_zip: String!
+}
+
+input ModelOrderFilterInput {
+  id: ModelIDInput
+  createdAt: ModelStringInput
+  and: [ModelOrderFilterInput]
+  or: [ModelOrderFilterInput]
+  not: ModelOrderFilterInput
+}
+
+input CreateOrderInput {
+  id: ID
+  shippingAddress: ShippingAddressInput
+  createdAt: String
+  orderProductId: ID
+  orderUserId: ID
+}
+
+input ModelOrderConditionInput {
+  createdAt: ModelStringInput
+  and: [ModelOrderConditionInput]
+  or: [ModelOrderConditionInput]
+  not: ModelOrderConditionInput
+}
+
+type ModelOrderConnection {
+  items: [Order]
+  nextToken: String
+}
+
+input SearchableStringFilterInput {
+  ne: String
+  gt: String
+  lt: String
+  gte: String
+  lte: String
+  eq: String
+  match: String
+  matchPhrase: String
+  matchPhrasePrefix: String
+  multiMatch: String
+  exists: Boolean
+  wildcard: String
+  regexp: String
+}
+
+input SearchableIDFilterInput {
+  ne: ID
+  gt: ID
+  lt: ID
+  gte: ID
+  lte: ID
+  eq: ID
+  match: ID
+  matchPhrase: ID
+  matchPhrasePrefix: ID
+  multiMatch: ID
+  exists: Boolean
+  wildcard: ID
+  regexp: ID
+}
+
+input SearchableIntFilterInput {
+  ne: Int
+  gt: Int
+  lt: Int
+  gte: Int
+  lte: Int
+  eq: Int
+  range: [Int]
+}
+
+input SearchableFloatFilterInput {
+  ne: Float
+  gt: Float
+  lt: Float
+  gte: Float
+  lte: Float
+  eq: Float
+  range: [Float]
+}
+
+input SearchableBooleanFilterInput {
+  eq: Boolean
+  ne: Boolean
+}
+
+input SearchableMarketFilterInput {
+  id: SearchableIDFilterInput
+  name: SearchableStringFilterInput
+  tags: SearchableStringFilterInput
+  owner: SearchableStringFilterInput
+  createdAt: SearchableStringFilterInput
+  and: [SearchableMarketFilterInput]
+  or: [SearchableMarketFilterInput]
+  not: SearchableMarketFilterInput
+}
+
+enum SearchableSortDirection {
+  asc
+  desc
+}
+
+enum SearchableMarketSortableFields {
+  id
+  name
+  tags
+  owner
+  createdAt
+}
+
+input SearchableMarketSortInput {
+  field: SearchableMarketSortableFields
+  direction: SearchableSortDirection
+}
+
+type SearchableMarketConnection {
+  items: [Market]
+  nextToken: String
+  total: Int
 }

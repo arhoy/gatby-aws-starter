@@ -1,60 +1,150 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateTask = /* GraphQL */ `
-  subscription OnCreateTask {
-    onCreateTask {
+export const onCreateMarket = /* GraphQL */ `
+  subscription OnCreateMarket {
+    onCreateMarket {
       id
-      title
-      description
-      status
-    }
-  }
-`;
-export const onUpdateTask = /* GraphQL */ `
-  subscription OnUpdateTask {
-    onUpdateTask {
-      id
-      title
-      description
-      status
-    }
-  }
-`;
-export const onDeleteTask = /* GraphQL */ `
-  subscription OnDeleteTask {
-    onDeleteTask {
-      id
-      title
-      description
-      status
-    }
-  }
-`;
-export const onCreatePrivateNote = /* GraphQL */ `
-  subscription OnCreatePrivateNote($owner: String!) {
-    onCreatePrivateNote(owner: $owner) {
-      id
-      content
+      name
+      products {
+        items {
+          id
+          description
+          price
+          shipped
+          owner
+          createdAt
+        }
+        nextToken
+      }
+      tags
       owner
+      createdAt
     }
   }
 `;
-export const onUpdatePrivateNote = /* GraphQL */ `
-  subscription OnUpdatePrivateNote($owner: String!) {
-    onUpdatePrivateNote(owner: $owner) {
+export const onUpdateMarket = /* GraphQL */ `
+  subscription OnUpdateMarket {
+    onUpdateMarket {
       id
-      content
+      name
+      products {
+        items {
+          id
+          description
+          price
+          shipped
+          owner
+          createdAt
+        }
+        nextToken
+      }
+      tags
       owner
+      createdAt
     }
   }
 `;
-export const onDeletePrivateNote = /* GraphQL */ `
-  subscription OnDeletePrivateNote($owner: String!) {
-    onDeletePrivateNote(owner: $owner) {
+export const onDeleteMarket = /* GraphQL */ `
+  subscription OnDeleteMarket {
+    onDeleteMarket {
       id
-      content
+      name
+      products {
+        items {
+          id
+          description
+          price
+          shipped
+          owner
+          createdAt
+        }
+        nextToken
+      }
+      tags
       owner
+      createdAt
+    }
+  }
+`;
+export const onCreateProduct = /* GraphQL */ `
+  subscription OnCreateProduct($owner: String!) {
+    onCreateProduct(owner: $owner) {
+      id
+      description
+      market {
+        id
+        name
+        products {
+          nextToken
+        }
+        tags
+        owner
+        createdAt
+      }
+      file {
+        bucket
+        region
+        key
+      }
+      price
+      shipped
+      owner
+      createdAt
+    }
+  }
+`;
+export const onUpdateProduct = /* GraphQL */ `
+  subscription OnUpdateProduct($owner: String!) {
+    onUpdateProduct(owner: $owner) {
+      id
+      description
+      market {
+        id
+        name
+        products {
+          nextToken
+        }
+        tags
+        owner
+        createdAt
+      }
+      file {
+        bucket
+        region
+        key
+      }
+      price
+      shipped
+      owner
+      createdAt
+    }
+  }
+`;
+export const onDeleteProduct = /* GraphQL */ `
+  subscription OnDeleteProduct($owner: String!) {
+    onDeleteProduct(owner: $owner) {
+      id
+      description
+      market {
+        id
+        name
+        products {
+          nextToken
+        }
+        tags
+        owner
+        createdAt
+      }
+      file {
+        bucket
+        region
+        key
+      }
+      price
+      shipped
+      owner
+      createdAt
     }
   }
 `;

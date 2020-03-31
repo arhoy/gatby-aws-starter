@@ -40,6 +40,92 @@
                 "false"
             ]
         },
+        "ElasticSearchAccessIAMRoleName": {
+            "Type": "String",
+            "Description": "The name of the IAM role assumed by AppSync for Elasticsearch.",
+            "Default": "AppSyncElasticsearchRole"
+        },
+        "ElasticSearchStreamingLambdaHandlerName": {
+            "Type": "String",
+            "Description": "The name of the lambda handler.",
+            "Default": "python_streaming_function.lambda_handler"
+        },
+        "ElasticSearchStreamingLambdaRuntime": {
+            "Type": "String",
+            "Description": "The lambda runtime                 (https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime)",
+            "Default": "python3.6"
+        },
+        "ElasticSearchStreamingFunctionName": {
+            "Type": "String",
+            "Description": "The name of the streaming lambda function.",
+            "Default": "DdbToEsFn"
+        },
+        "ElasticSearchStreamingIAMRoleName": {
+            "Type": "String",
+            "Description": "The name of the streaming lambda function IAM role.",
+            "Default": "SearchableLambdaIAMRole"
+        },
+        "ElasticSearchDebugStreamingLambda": {
+            "Type": "Number",
+            "Description": "Enable debug logs for the Dynamo -> ES streaming lambda.",
+            "Default": 1,
+            "AllowedValues": [
+                0,
+                1
+            ]
+        },
+        "ElasticSearchInstanceCount": {
+            "Type": "Number",
+            "Description": "The number of instances to launch into the Elasticsearch domain.",
+            "Default": 1
+        },
+        "ElasticSearchInstanceType": {
+            "Type": "String",
+            "Description": "The type of instance to launch into the Elasticsearch domain.",
+            "Default": "t2.small.elasticsearch",
+            "AllowedValues": [
+                "t2.small.elasticsearch",
+                "t2.medium.elasticsearch",
+                "c4.large.elasticsearch",
+                "c4.xlarge.elasticsearch",
+                "c4.2xlarge.elasticsearch",
+                "c4.4xlarge.elasticsearch",
+                "c4.8xlarge.elasticsearch",
+                "m3.medium.elasticsearch",
+                "m3.large.elasticsearch",
+                "m3.xlarge.elasticsearch",
+                "m3.2xlarge.elasticsearch",
+                "m4.large.elasticsearch",
+                "m4.xlarge.elasticsearch",
+                "m4.2xlarge.elasticsearch",
+                "m4.4xlarge.elasticsearch",
+                "m4.10xlarge.elasticsearch",
+                "r3.large.elasticsearch",
+                "r3.xlarge.elasticsearch",
+                "r3.2xlarge.elasticsearch",
+                "r3.4xlarge.elasticsearch",
+                "r3.8xlarge.elasticsearch",
+                "r4.large.elasticsearch",
+                "r4.xlarge.elasticsearch",
+                "r4.2xlarge.elasticsearch",
+                "r4.4xlarge.elasticsearch",
+                "r4.8xlarge.elasticsearch",
+                "r4.16xlarge.elasticsearch",
+                "i2.xlarge.elasticsearch",
+                "i2.2xlarge.elasticsearch",
+                "i3.large.elasticsearch",
+                "i3.xlarge.elasticsearch",
+                "i3.2xlarge.elasticsearch",
+                "i3.4xlarge.elasticsearch",
+                "i3.8xlarge.elasticsearch",
+                "i3.16xlarge.elasticsearch"
+            ]
+        },
+        "ElasticSearchEBSVolumeGB": {
+            "Type": "Number",
+            "Description": "The size in GB of the EBS volumes that contain our data.",
+            "Default": 10
+        },
         "AppSyncApiName": {
             "Type": "String",
             "Description": "The name of the AppSync API",
@@ -129,7 +215,7 @@
                         {
                             "Ref": "APIKeyExpirationEpoch"
                         },
-                        1585868607
+                        1585990970
                     ]
                 }
             },
@@ -172,7 +258,7 @@
                 }
             }
         },
-        "Task": {
+        "Market": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
                 "Parameters": {
@@ -196,6 +282,33 @@
                     },
                     "DynamoDBEnableServerSideEncryption": {
                         "Ref": "DynamoDBEnableServerSideEncryption"
+                    },
+                    "ElasticSearchAccessIAMRoleName": {
+                        "Ref": "ElasticSearchAccessIAMRoleName"
+                    },
+                    "ElasticSearchStreamingLambdaHandlerName": {
+                        "Ref": "ElasticSearchStreamingLambdaHandlerName"
+                    },
+                    "ElasticSearchStreamingLambdaRuntime": {
+                        "Ref": "ElasticSearchStreamingLambdaRuntime"
+                    },
+                    "ElasticSearchStreamingFunctionName": {
+                        "Ref": "ElasticSearchStreamingFunctionName"
+                    },
+                    "ElasticSearchStreamingIAMRoleName": {
+                        "Ref": "ElasticSearchStreamingIAMRoleName"
+                    },
+                    "ElasticSearchDebugStreamingLambda": {
+                        "Ref": "ElasticSearchDebugStreamingLambda"
+                    },
+                    "ElasticSearchInstanceCount": {
+                        "Ref": "ElasticSearchInstanceCount"
+                    },
+                    "ElasticSearchInstanceType": {
+                        "Ref": "ElasticSearchInstanceType"
+                    },
+                    "ElasticSearchEBSVolumeGB": {
+                        "Ref": "ElasticSearchEBSVolumeGB"
                     },
                     "AppSyncApiName": {
                         "Ref": "AppSyncApiName"
@@ -237,7 +350,7 @@
                                 "Ref": "S3DeploymentRootKey"
                             },
                             "stacks",
-                            "Task.json"
+                            "Market.json"
                         ]
                     ]
                 }
@@ -247,7 +360,7 @@
                 "NoneDataSource"
             ]
         },
-        "PrivateNote": {
+        "Product": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
                 "Parameters": {
@@ -271,6 +384,33 @@
                     },
                     "DynamoDBEnableServerSideEncryption": {
                         "Ref": "DynamoDBEnableServerSideEncryption"
+                    },
+                    "ElasticSearchAccessIAMRoleName": {
+                        "Ref": "ElasticSearchAccessIAMRoleName"
+                    },
+                    "ElasticSearchStreamingLambdaHandlerName": {
+                        "Ref": "ElasticSearchStreamingLambdaHandlerName"
+                    },
+                    "ElasticSearchStreamingLambdaRuntime": {
+                        "Ref": "ElasticSearchStreamingLambdaRuntime"
+                    },
+                    "ElasticSearchStreamingFunctionName": {
+                        "Ref": "ElasticSearchStreamingFunctionName"
+                    },
+                    "ElasticSearchStreamingIAMRoleName": {
+                        "Ref": "ElasticSearchStreamingIAMRoleName"
+                    },
+                    "ElasticSearchDebugStreamingLambda": {
+                        "Ref": "ElasticSearchDebugStreamingLambda"
+                    },
+                    "ElasticSearchInstanceCount": {
+                        "Ref": "ElasticSearchInstanceCount"
+                    },
+                    "ElasticSearchInstanceType": {
+                        "Ref": "ElasticSearchInstanceType"
+                    },
+                    "ElasticSearchEBSVolumeGB": {
+                        "Ref": "ElasticSearchEBSVolumeGB"
                     },
                     "AppSyncApiName": {
                         "Ref": "AppSyncApiName"
@@ -312,7 +452,7 @@
                                 "Ref": "S3DeploymentRootKey"
                             },
                             "stacks",
-                            "PrivateNote.json"
+                            "Product.json"
                         ]
                     ]
                 }
@@ -320,6 +460,419 @@
             "DependsOn": [
                 "GraphQLSchema",
                 "NoneDataSource"
+            ]
+        },
+        "User": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "Parameters": {
+                    "AppSyncApiId": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPI",
+                            "ApiId"
+                        ]
+                    },
+                    "DynamoDBModelTableReadIOPS": {
+                        "Ref": "DynamoDBModelTableReadIOPS"
+                    },
+                    "DynamoDBModelTableWriteIOPS": {
+                        "Ref": "DynamoDBModelTableWriteIOPS"
+                    },
+                    "DynamoDBBillingMode": {
+                        "Ref": "DynamoDBBillingMode"
+                    },
+                    "DynamoDBEnablePointInTimeRecovery": {
+                        "Ref": "DynamoDBEnablePointInTimeRecovery"
+                    },
+                    "DynamoDBEnableServerSideEncryption": {
+                        "Ref": "DynamoDBEnableServerSideEncryption"
+                    },
+                    "ElasticSearchAccessIAMRoleName": {
+                        "Ref": "ElasticSearchAccessIAMRoleName"
+                    },
+                    "ElasticSearchStreamingLambdaHandlerName": {
+                        "Ref": "ElasticSearchStreamingLambdaHandlerName"
+                    },
+                    "ElasticSearchStreamingLambdaRuntime": {
+                        "Ref": "ElasticSearchStreamingLambdaRuntime"
+                    },
+                    "ElasticSearchStreamingFunctionName": {
+                        "Ref": "ElasticSearchStreamingFunctionName"
+                    },
+                    "ElasticSearchStreamingIAMRoleName": {
+                        "Ref": "ElasticSearchStreamingIAMRoleName"
+                    },
+                    "ElasticSearchDebugStreamingLambda": {
+                        "Ref": "ElasticSearchDebugStreamingLambda"
+                    },
+                    "ElasticSearchInstanceCount": {
+                        "Ref": "ElasticSearchInstanceCount"
+                    },
+                    "ElasticSearchInstanceType": {
+                        "Ref": "ElasticSearchInstanceType"
+                    },
+                    "ElasticSearchEBSVolumeGB": {
+                        "Ref": "ElasticSearchEBSVolumeGB"
+                    },
+                    "AppSyncApiName": {
+                        "Ref": "AppSyncApiName"
+                    },
+                    "APIKeyExpirationEpoch": {
+                        "Ref": "APIKeyExpirationEpoch"
+                    },
+                    "CreateAPIKey": {
+                        "Ref": "CreateAPIKey"
+                    },
+                    "AuthCognitoUserPoolId": {
+                        "Ref": "AuthCognitoUserPoolId"
+                    },
+                    "env": {
+                        "Ref": "env"
+                    },
+                    "S3DeploymentBucket": {
+                        "Ref": "S3DeploymentBucket"
+                    },
+                    "S3DeploymentRootKey": {
+                        "Ref": "S3DeploymentRootKey"
+                    },
+                    "GetAttGraphQLAPIApiId": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPI",
+                            "ApiId"
+                        ]
+                    }
+                },
+                "TemplateURL": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            "https://s3.amazonaws.com",
+                            {
+                                "Ref": "S3DeploymentBucket"
+                            },
+                            {
+                                "Ref": "S3DeploymentRootKey"
+                            },
+                            "stacks",
+                            "User.json"
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": [
+                "GraphQLSchema",
+                "NoneDataSource"
+            ]
+        },
+        "Order": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "Parameters": {
+                    "AppSyncApiId": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPI",
+                            "ApiId"
+                        ]
+                    },
+                    "DynamoDBModelTableReadIOPS": {
+                        "Ref": "DynamoDBModelTableReadIOPS"
+                    },
+                    "DynamoDBModelTableWriteIOPS": {
+                        "Ref": "DynamoDBModelTableWriteIOPS"
+                    },
+                    "DynamoDBBillingMode": {
+                        "Ref": "DynamoDBBillingMode"
+                    },
+                    "DynamoDBEnablePointInTimeRecovery": {
+                        "Ref": "DynamoDBEnablePointInTimeRecovery"
+                    },
+                    "DynamoDBEnableServerSideEncryption": {
+                        "Ref": "DynamoDBEnableServerSideEncryption"
+                    },
+                    "ElasticSearchAccessIAMRoleName": {
+                        "Ref": "ElasticSearchAccessIAMRoleName"
+                    },
+                    "ElasticSearchStreamingLambdaHandlerName": {
+                        "Ref": "ElasticSearchStreamingLambdaHandlerName"
+                    },
+                    "ElasticSearchStreamingLambdaRuntime": {
+                        "Ref": "ElasticSearchStreamingLambdaRuntime"
+                    },
+                    "ElasticSearchStreamingFunctionName": {
+                        "Ref": "ElasticSearchStreamingFunctionName"
+                    },
+                    "ElasticSearchStreamingIAMRoleName": {
+                        "Ref": "ElasticSearchStreamingIAMRoleName"
+                    },
+                    "ElasticSearchDebugStreamingLambda": {
+                        "Ref": "ElasticSearchDebugStreamingLambda"
+                    },
+                    "ElasticSearchInstanceCount": {
+                        "Ref": "ElasticSearchInstanceCount"
+                    },
+                    "ElasticSearchInstanceType": {
+                        "Ref": "ElasticSearchInstanceType"
+                    },
+                    "ElasticSearchEBSVolumeGB": {
+                        "Ref": "ElasticSearchEBSVolumeGB"
+                    },
+                    "AppSyncApiName": {
+                        "Ref": "AppSyncApiName"
+                    },
+                    "APIKeyExpirationEpoch": {
+                        "Ref": "APIKeyExpirationEpoch"
+                    },
+                    "CreateAPIKey": {
+                        "Ref": "CreateAPIKey"
+                    },
+                    "AuthCognitoUserPoolId": {
+                        "Ref": "AuthCognitoUserPoolId"
+                    },
+                    "env": {
+                        "Ref": "env"
+                    },
+                    "S3DeploymentBucket": {
+                        "Ref": "S3DeploymentBucket"
+                    },
+                    "S3DeploymentRootKey": {
+                        "Ref": "S3DeploymentRootKey"
+                    },
+                    "GetAttGraphQLAPIApiId": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPI",
+                            "ApiId"
+                        ]
+                    }
+                },
+                "TemplateURL": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            "https://s3.amazonaws.com",
+                            {
+                                "Ref": "S3DeploymentBucket"
+                            },
+                            {
+                                "Ref": "S3DeploymentRootKey"
+                            },
+                            "stacks",
+                            "Order.json"
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": [
+                "GraphQLSchema",
+                "NoneDataSource"
+            ]
+        },
+        "ConnectionStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "Parameters": {
+                    "AppSyncApiId": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPI",
+                            "ApiId"
+                        ]
+                    },
+                    "DynamoDBModelTableReadIOPS": {
+                        "Ref": "DynamoDBModelTableReadIOPS"
+                    },
+                    "DynamoDBModelTableWriteIOPS": {
+                        "Ref": "DynamoDBModelTableWriteIOPS"
+                    },
+                    "DynamoDBBillingMode": {
+                        "Ref": "DynamoDBBillingMode"
+                    },
+                    "DynamoDBEnablePointInTimeRecovery": {
+                        "Ref": "DynamoDBEnablePointInTimeRecovery"
+                    },
+                    "DynamoDBEnableServerSideEncryption": {
+                        "Ref": "DynamoDBEnableServerSideEncryption"
+                    },
+                    "ElasticSearchAccessIAMRoleName": {
+                        "Ref": "ElasticSearchAccessIAMRoleName"
+                    },
+                    "ElasticSearchStreamingLambdaHandlerName": {
+                        "Ref": "ElasticSearchStreamingLambdaHandlerName"
+                    },
+                    "ElasticSearchStreamingLambdaRuntime": {
+                        "Ref": "ElasticSearchStreamingLambdaRuntime"
+                    },
+                    "ElasticSearchStreamingFunctionName": {
+                        "Ref": "ElasticSearchStreamingFunctionName"
+                    },
+                    "ElasticSearchStreamingIAMRoleName": {
+                        "Ref": "ElasticSearchStreamingIAMRoleName"
+                    },
+                    "ElasticSearchDebugStreamingLambda": {
+                        "Ref": "ElasticSearchDebugStreamingLambda"
+                    },
+                    "ElasticSearchInstanceCount": {
+                        "Ref": "ElasticSearchInstanceCount"
+                    },
+                    "ElasticSearchInstanceType": {
+                        "Ref": "ElasticSearchInstanceType"
+                    },
+                    "ElasticSearchEBSVolumeGB": {
+                        "Ref": "ElasticSearchEBSVolumeGB"
+                    },
+                    "AppSyncApiName": {
+                        "Ref": "AppSyncApiName"
+                    },
+                    "APIKeyExpirationEpoch": {
+                        "Ref": "APIKeyExpirationEpoch"
+                    },
+                    "CreateAPIKey": {
+                        "Ref": "CreateAPIKey"
+                    },
+                    "AuthCognitoUserPoolId": {
+                        "Ref": "AuthCognitoUserPoolId"
+                    },
+                    "env": {
+                        "Ref": "env"
+                    },
+                    "S3DeploymentBucket": {
+                        "Ref": "S3DeploymentBucket"
+                    },
+                    "S3DeploymentRootKey": {
+                        "Ref": "S3DeploymentRootKey"
+                    },
+                    "GetAttGraphQLAPIApiId": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPI",
+                            "ApiId"
+                        ]
+                    }
+                },
+                "TemplateURL": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            "https://s3.amazonaws.com",
+                            {
+                                "Ref": "S3DeploymentBucket"
+                            },
+                            {
+                                "Ref": "S3DeploymentRootKey"
+                            },
+                            "stacks",
+                            "ConnectionStack.json"
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": [
+                "GraphQLSchema",
+                "NoneDataSource",
+                "Product",
+                "Market",
+                "Order",
+                "User"
+            ]
+        },
+        "SearchableStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "Parameters": {
+                    "AppSyncApiId": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPI",
+                            "ApiId"
+                        ]
+                    },
+                    "DynamoDBModelTableReadIOPS": {
+                        "Ref": "DynamoDBModelTableReadIOPS"
+                    },
+                    "DynamoDBModelTableWriteIOPS": {
+                        "Ref": "DynamoDBModelTableWriteIOPS"
+                    },
+                    "DynamoDBBillingMode": {
+                        "Ref": "DynamoDBBillingMode"
+                    },
+                    "DynamoDBEnablePointInTimeRecovery": {
+                        "Ref": "DynamoDBEnablePointInTimeRecovery"
+                    },
+                    "DynamoDBEnableServerSideEncryption": {
+                        "Ref": "DynamoDBEnableServerSideEncryption"
+                    },
+                    "ElasticSearchAccessIAMRoleName": {
+                        "Ref": "ElasticSearchAccessIAMRoleName"
+                    },
+                    "ElasticSearchStreamingLambdaHandlerName": {
+                        "Ref": "ElasticSearchStreamingLambdaHandlerName"
+                    },
+                    "ElasticSearchStreamingLambdaRuntime": {
+                        "Ref": "ElasticSearchStreamingLambdaRuntime"
+                    },
+                    "ElasticSearchStreamingFunctionName": {
+                        "Ref": "ElasticSearchStreamingFunctionName"
+                    },
+                    "ElasticSearchStreamingIAMRoleName": {
+                        "Ref": "ElasticSearchStreamingIAMRoleName"
+                    },
+                    "ElasticSearchDebugStreamingLambda": {
+                        "Ref": "ElasticSearchDebugStreamingLambda"
+                    },
+                    "ElasticSearchInstanceCount": {
+                        "Ref": "ElasticSearchInstanceCount"
+                    },
+                    "ElasticSearchInstanceType": {
+                        "Ref": "ElasticSearchInstanceType"
+                    },
+                    "ElasticSearchEBSVolumeGB": {
+                        "Ref": "ElasticSearchEBSVolumeGB"
+                    },
+                    "AppSyncApiName": {
+                        "Ref": "AppSyncApiName"
+                    },
+                    "APIKeyExpirationEpoch": {
+                        "Ref": "APIKeyExpirationEpoch"
+                    },
+                    "CreateAPIKey": {
+                        "Ref": "CreateAPIKey"
+                    },
+                    "AuthCognitoUserPoolId": {
+                        "Ref": "AuthCognitoUserPoolId"
+                    },
+                    "env": {
+                        "Ref": "env"
+                    },
+                    "S3DeploymentBucket": {
+                        "Ref": "S3DeploymentBucket"
+                    },
+                    "S3DeploymentRootKey": {
+                        "Ref": "S3DeploymentRootKey"
+                    },
+                    "GetAttGraphQLAPIApiId": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPI",
+                            "ApiId"
+                        ]
+                    }
+                },
+                "TemplateURL": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            "https://s3.amazonaws.com",
+                            {
+                                "Ref": "S3DeploymentBucket"
+                            },
+                            {
+                                "Ref": "S3DeploymentRootKey"
+                            },
+                            "stacks",
+                            "SearchableStack.json"
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": [
+                "GraphQLSchema",
+                "NoneDataSource",
+                "Market"
             ]
         },
         "CustomResourcesjson": {
@@ -365,8 +918,12 @@
             "DependsOn": [
                 "GraphQLAPI",
                 "GraphQLSchema",
-                "Task",
-                "PrivateNote"
+                "Market",
+                "Product",
+                "User",
+                "Order",
+                "ConnectionStack",
+                "SearchableStack"
             ]
         }
     },

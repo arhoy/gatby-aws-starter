@@ -59,7 +59,7 @@ const Section2 = styled(Section)`
     justify-content: space-between;
   }
 `;
-
+//eslint-disable-next-line
 const Section4 = styled(Section)`
   grid-column: 4/-1;
   grid-row: 1/2;
