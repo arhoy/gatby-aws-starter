@@ -4,7 +4,7 @@ import { SectionGrey } from '../../reusableStyles/sections/Sections';
 import { FooterNavigation } from './FooterComponents/FooterNavigation';
 import { FooterFollow } from './FooterComponents/FooterFollow';
 import { FooterContact } from './FooterComponents/FooterContact';
-// import { MailChimpFooter } from './FooterComponents/MailChimpFooter';
+import { MailChimpFooter } from './FooterComponents/MailChimpFooter';
 import { FooterBottom } from './FooterComponents/FooterBottom';
 
 const CustomSection = styled(SectionGrey)`
@@ -89,9 +89,9 @@ export const Footer = () => {
           <FooterContact />
         </Section2>
 
-        {/* <Section4>
+        <Section4>
           <MailChimpFooter />
-        </Section4> */}
+        </Section4>
         <Section5>
           <FooterBottom />
         </Section5>
