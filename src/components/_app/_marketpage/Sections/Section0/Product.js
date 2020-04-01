@@ -1,13 +1,24 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
+
+// styling
 import styled from '@emotion/styled';
-import { S3Image } from 'aws-amplify-react';
 import { Button } from 'antd';
-import { centsToDollars } from '../../../../../utils/awsHelpers';
+
+// aws
 import { API, graphqlOperation } from 'aws-amplify';
+import { S3Image } from 'aws-amplify-react';
 import { deleteProduct } from '../../../../../graphql/mutations';
-import { FormModal } from './FormModal';
-import { EditProductForm } from './EditProductForm';
+
+// utils
+import { centsToDollars } from '../../../../../utils/awsHelpers';
+
+// context
 import { UserContext } from '../../../../../context/user-context';
+
+// components
+import { EditFormModal } from './EditFormModal';
+import { onDeleteProduct } from '../../../../../graphql/subscriptions';
+import { ProductsContext } from '../../../../../context/products-context';
 
 const Container = styled.div`
   border-bottom: 1px black dashed;
@@ -39,8 +50,31 @@ const StyledButton = styled(Button)`
 `;
 
 export const Product = ({ product }) => {
+  // context
+  const [market, setMarket] = useContext(ProductsContext);
   const user = useContext(UserContext);
   const owner = user.sub;
+
+  useEffect(() => {
+    const deleteProductListener = API.graphql(
+      graphqlOperation(onDeleteProduct, { owner }),
+    ).subscribe({
+      next: productData => {
+        const deleteProduct = productData.value.data.onDeleteProduct;
+        setMarket(prevMarket => {
+          const updatedProducts = prevMarket.products.items.filter(
+            product => product.id !== deleteProduct.id,
+          );
+          return { ...market, products: { items: updatedProducts } };
+        });
+      },
+    });
+
+    // cleanup
+    return () => {
+      deleteProductListener.unsubscribe();
+    };
+  }, [market]);
 
   // delete the product from AWS
   const deleteProductHandler = async () => {
@@ -48,11 +82,7 @@ export const Product = ({ product }) => {
       const input = {
         id: product.id,
       };
-      console.log('I was deleted');
-      const result = await API.graphql(
-        graphqlOperation(deleteProduct, { input }),
-      );
-      console.log('delete success', result);
+      await API.graphql(graphqlOperation(deleteProduct, { input }));
     } catch (error) {
       console.error('Could not delete product', error);
     }
@@ -67,9 +97,7 @@ export const Product = ({ product }) => {
         theme={{ photoImg: { maxWidth: '100%', maxHeight: '100%' } }}
       />
       <ButtonContainer>
-        <FormModal>
-          <EditProductForm product={product} owner={owner} />
-        </FormModal>
+        <EditFormModal product={product} owner={owner} />
         <StyledButton onClick={deleteProductHandler}>
           Delete Product
         </StyledButton>
